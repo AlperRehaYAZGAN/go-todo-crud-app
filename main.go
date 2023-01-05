@@ -17,7 +17,7 @@ var cache *redis.Client
 
 func main() {
 	// init db connection
-	db = common.NewSqliteDB("myapp.db")
+	db = common.NewPostgresDB("postgres://bbpguser:bbpguserpassword@localhost:5432/postgres?sslmode=disable")
 	common.SetupDBTables(db)
 
 	// init cache connection

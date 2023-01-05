@@ -1,17 +1,17 @@
 package common
 
 import (
-	// "gorm.io/driver/postgres"
-	"gotodoapp/models"
 	"log"
 
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
+
 	"gorm.io/gorm"
+
+	"gotodoapp/models"
 )
 
-func NewSqliteDB(dbUrl string) *gorm.DB {
-	// db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
-	db, err := gorm.Open(sqlite.Open(dbUrl), &gorm.Config{})
+func NewPostgresDB(dbUrl string) *gorm.DB {
+	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 	if err != nil {
 		log.Fatalln("INIT: error_db_initial_conn: ", err)
 	}
