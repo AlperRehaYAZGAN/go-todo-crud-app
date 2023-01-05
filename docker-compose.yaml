@@ -1,0 +1,48 @@
+# simple docker-compose.yml file for redis, postgres
+version: '3'
+
+services:
+  # postgresql service
+  postgresqlapp:
+    image: postgres:12.13-alpine
+    networks:
+      - bbfnnet
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=bbpguser
+      - POSTGRES_PASSWORD=bbpguserpassword
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    restart: always
+    healthcheck:
+      test: pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 10s
+      timeout: 2s
+      retries: 10
+  # redis service
+  redisapp:
+    image: redis:7.0-rc3-alpine3.15
+    networks:
+      - bbfnnet
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./volumes/redis:/data
+    environment:
+      - REDIS_PASSWORD=1020304050
+    restart: always
+    command: redis-server --requirepass 1020304050 --dir /data
+    healthcheck:
+      test: redis-cli -h "$$HOST" -p "$$PORT" ping
+      interval: 10s
+      timeout: 2s
+      retries: 10
+
+# network: bbfnnet
+networks:
+  bbfnnet:
+    name: bbfnnet
+    driver: bridge
